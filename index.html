@@ -3,26 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#123b4a">
+  <meta name="theme-color" content="#8f1827">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Indisponibilidades">
+  <meta name="apple-mobile-web-app-title" content="Irmandade Espírito Santo">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>Indisponibilidade | Irmandade do Santíssimo</title>
+  <title>Irmandade Paróquia Espírito Santo</title>
   <style>
-    :root{--ink:#16343d;--muted:#61747a;--brand:#176b70;--brand-dark:#123b4a;--gold:#e5b85c;--line:#dbe5e5;--bg:#f3f7f6;--card:#fff;--danger:#a73e42;--ok:#23734f}
+    :root{--ink:#3f2529;--muted:#7a6265;--brand:#a51f32;--brand-dark:#741421;--gold:#e5b85c;--line:#ead8d8;--bg:#fbf7f6;--card:#fff;--danger:#a73e42;--ok:#23734f}
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
     .hero{background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff;padding:28px 20px 42px}.hero-inner,.main{max-width:960px;margin:auto}.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:.75rem;font-weight:800;color:var(--gold)}h1{margin:8px 0 6px;font-size:clamp(1.65rem,4vw,2.5rem)}.hero p{margin:0;max-width:640px;color:#d9eeee;line-height:1.5}
-    .main{display:none;margin-top:-22px;padding:0 16px 42px}.auth{max-width:520px;margin:-22px auto 0;padding:0 16px 42px}.auth .card{text-align:center}.google{background:#fff;color:var(--ink);border:1px solid var(--line);width:100%;display:flex;justify-content:center;gap:10px;align-items:center}.google:before{content:'G';font-weight:900;color:#4285f4}.user-badge{float:right;background:#e8f1f0;color:var(--brand-dark);border-radius:99px;padding:6px 10px;font-size:.78rem}.main.authenticated{display:block}.auth.hidden{display:none}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px #123b4a12;padding:22px;margin-bottom:16px}.card h2{font-size:1.12rem;margin:0 0 5px}.hint{color:var(--muted);font-size:.9rem;margin:0 0 18px}.form-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:.84rem;font-weight:750}.field input,.field select{border:1px solid #cbdada;border-radius:10px;padding:12px;font:inherit;color:var(--ink);background:#fff}.field input:focus,.field select:focus{outline:3px solid #176b7030;border-color:var(--brand)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:10px;padding:11px 15px;font:inherit;font-weight:750;cursor:pointer}.primary{background:var(--brand);color:#fff}.secondary{background:#e8f1f0;color:var(--brand-dark)}.danger{background:#fff0f0;color:var(--danger)}button:hover{filter:brightness(.96)}.message{display:none;margin-top:14px;padding:11px 13px;border-radius:10px;font-size:.9rem}.message.ok{display:block;background:#eaf7f0;color:var(--ok)}.message.error{display:block;background:#fff0f0;color:var(--danger)}
+    .main{display:none;margin-top:-22px;padding:0 16px 42px}.auth{max-width:520px;margin:-22px auto 0;padding:0 16px 42px}.auth .card{text-align:center}.google{background:#fff;color:var(--ink);border:1px solid var(--line);width:100%;display:flex;justify-content:center;gap:10px;align-items:center}.google:before{content:'G';font-weight:900;color:#4285f4}.user-badge{float:right;background:#f6e5e7;color:var(--brand-dark);border-radius:99px;padding:6px 10px;font-size:.78rem}.main.authenticated{display:block}.auth.hidden{display:none}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px #74142112;padding:22px;margin-bottom:16px}.card h2{font-size:1.12rem;margin:0 0 5px}.hint{color:var(--muted);font-size:.9rem;margin:0 0 18px}.form-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:.84rem;font-weight:750}.field input,.field select{border:1px solid #d8c4c7;border-radius:10px;padding:12px;font:inherit;color:var(--ink);background:#fff}.field input:focus,.field select:focus{outline:3px solid #a51f3230;border-color:var(--brand)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:10px;padding:11px 15px;font:inherit;font-weight:750;cursor:pointer}.primary{background:var(--brand);color:#fff}.secondary{background:#f6e5e7;color:var(--brand-dark)}.danger{background:#fff0f0;color:var(--danger)}button:hover{filter:brightness(.96)}.message{display:none;margin-top:14px;padding:11px 13px;border-radius:10px;font-size:.9rem}.message.ok{display:block;background:#eaf7f0;color:var(--ok)}.message.error{display:block;background:#fff0f0;color:var(--danger)}
     .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.stat{background:#f5f9f8;border-radius:12px;padding:13px}.stat strong{display:block;font-size:1.35rem;color:var(--brand-dark)}.stat span{font-size:.78rem;color:var(--muted)}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.toolbar input{max-width:250px;border:1px solid var(--line);border-radius:9px;padding:9px;font:inherit}.empty{padding:26px;text-align:center;color:var(--muted);background:#f7faf9;border-radius:12px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}td:last-child{text-align:right}.remove{padding:6px 9px;background:#fff0f0;color:var(--danger);font-size:.8rem}.foot{color:var(--muted);text-align:center;font-size:.8rem;margin-top:18px}
-    td:last-child{text-align:right}.remove{padding:6px 9px;background:#fff0f0;color:var(--danger);font-size:.8rem}.edit{padding:6px 9px;background:#e8f1f0;color:var(--brand-dark);font-size:.8rem;margin-right:5px}.table-actions{display:flex;justify-content:flex-end}.lock-status{font-weight:800;color:var(--danger)}.lock-status.open{color:var(--ok)}
+    td:last-child{text-align:right}.remove{padding:6px 9px;background:#fff0f0;color:var(--danger);font-size:.8rem}.edit{padding:6px 9px;background:#f6e5e7;color:var(--brand-dark);font-size:.8rem;margin-right:5px}.table-actions{display:flex;justify-content:flex-end}.lock-status{font-weight:800;color:var(--danger)}.lock-status.open{color:var(--ok)}
+    .brand-logo{width:88px;height:88px;object-fit:contain;border-radius:50%;float:left;margin-right:14px;background:#fff;box-shadow:0 4px 16px #0002}.hero-inner{overflow:hidden}.hero h1{padding-top:8px}
     @media(max-width:620px){.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.toolbar{align-items:stretch;flex-direction:column}.toolbar input{max-width:none;width:100%}.card{padding:18px}.hero{padding-top:24px}}
   </style>
 </head>
 <body>
-  <header class="hero"><div class="hero-inner"><div class="eyebrow">Irmandade do Santíssimo Sacramento</div><h1>Informe quando você não pode servir</h1><p>Registre cada data de indisponibilidade. Essas informações serão usadas na montagem das escalas das três igrejas.</p></div></header>
+  <header class="hero"><div class="hero-inner"><img class="brand-logo" src="logo-irmandade.png" alt="Logotipo da Irmandade do Santíssimo Sacramento"><div class="eyebrow">Paróquia Espírito Santo</div><h1>Informe quando você não pode servir</h1><p>Registre cada data de indisponibilidade. Essas informações serão usadas na montagem das escalas das três igrejas.</p></div></header>
   <main class="main">
     <section class="card" id="lockCard" hidden>
       <h2>Alterações das indisponibilidades</h2>
@@ -127,7 +128,7 @@
     lockStatus.textContent=editsLocked?'Alterações bloqueadas':'Alterações liberadas';
     lockStatus.className='lock-status'+(editsLocked?'':' open');
     document.getElementById('toggleLockBtn').textContent=editsLocked?'Liberar alterações':'Bloquear alterações';
-    document.querySelector('#unavailabilityForm button[type="submit"]').disabled=editsLocked;
+    document.querySelector('#unavailabilityForm button[type="submit"]').disabled=editsLocked && profile?.role==='user';
   }
   function renderShared(){
     const term=document.getElementById('filter').value.trim().toLocaleLowerCase('pt-BR');

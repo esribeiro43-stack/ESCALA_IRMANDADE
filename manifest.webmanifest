@@ -1,14 +1,14 @@
 {
-  "name": "Indisponibilidades da Irmandade",
-  "short_name": "Indisponibilidade",
+  "name": "Irmandade Paróquia Espírito Santo",
+  "short_name": "Irmandade Espírito Santo",
   "description": "Cadastro compartilhado das datas de indisponibilidade da Irmandade.",
   "lang": "pt-BR",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#f3f7f6",
-  "theme_color": "#176b70",
+  "background_color": "#fbf7f6",
+  "theme_color": "#8f1827",
   "icons": [
     {
       "src": "icons/icon-192.png",
