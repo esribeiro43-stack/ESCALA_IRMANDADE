@@ -16,14 +16,38 @@ create table if not exists public.unavailabilities (
   unique (user_id, unavailable_date)
 );
 
+create table if not exists public.app_settings (
+  key text primary key,
+  edits_locked boolean not null default false,
+  updated_at timestamptz not null default now()
+);
+
+insert into public.app_settings (key, edits_locked)
+values ('unavailabilities', false)
+on conflict (key) do nothing;
+
 alter table public.profiles enable row level security;
 alter table public.unavailabilities enable row level security;
+alter table public.app_settings enable row level security;
 
 create policy "users can read own profile" on public.profiles
   for select using (auth.uid() = id);
 
-create policy "users manage own unavailability" on public.unavailabilities
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "users manage own unavailability" on public.unavailabilities;
+drop policy if exists "users_can_insert_own_unavailability" on public.unavailabilities;
+drop policy if exists "users_can_select_own_unavailability" on public.unavailabilities;
+
+create policy "users insert own unavailability" on public.unavailabilities
+  for insert to authenticated with check (auth.uid() = user_id);
+
+create policy "users read own unavailability" on public.unavailabilities
+  for select to authenticated using (auth.uid() = user_id);
+
+create policy "users update own unavailability" on public.unavailabilities
+  for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create policy "users delete own unavailability" on public.unavailabilities
+  for delete to authenticated using (auth.uid() = user_id);
 
 create or replace function public.is_admin()
 returns boolean
@@ -40,6 +64,13 @@ $$;
 
 revoke all on function public.is_admin() from public;
 grant execute on function public.is_admin() to authenticated;
+
+create policy "authenticated read edit lock" on public.app_settings
+  for select to authenticated using (true);
+
+create policy "admins update edit lock" on public.app_settings
+  for update to authenticated using (public.is_admin())
+  with check (public.is_admin());
 
 create policy "admins read all unavailability" on public.unavailabilities
   for select using (public.is_admin());
