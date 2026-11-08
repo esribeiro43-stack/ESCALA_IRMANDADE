@@ -114,7 +114,11 @@
   }
   async function loadEditLock(){
     const {data,error}=await supabase.from('app_settings').select('edits_locked').eq('key','unavailabilities').single();
-    if(error) throw error;
+    if(error){
+      editsLocked=false;
+      renderLockControls();
+      return;
+    }
     editsLocked=Boolean(data.edits_locked);
     renderLockControls();
   }
