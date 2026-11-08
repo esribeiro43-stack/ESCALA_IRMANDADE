@@ -1,0 +1,8 @@
+.venv/
+*.zip
+CONTROLE DE PRESENÇA.xlsx
+ESCALA.xlsx
+dados_escala_exemplo.csv
+escala_*.csv
+REGRA_DE_NEGOCIO.txt
+formulario_escala.html

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b4a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Indisponibilidades">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>Indisponibilidade | Irmandade do Santíssimo</title>
+  <style>
+    :root{--ink:#16343d;--muted:#61747a;--brand:#176b70;--brand-dark:#123b4a;--gold:#e5b85c;--line:#dbe5e5;--bg:#f3f7f6;--card:#fff;--danger:#a73e42;--ok:#23734f}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+    .hero{background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff;padding:28px 20px 42px}.hero-inner,.main{max-width:960px;margin:auto}.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:.75rem;font-weight:800;color:var(--gold)}h1{margin:8px 0 6px;font-size:clamp(1.65rem,4vw,2.5rem)}.hero p{margin:0;max-width:640px;color:#d9eeee;line-height:1.5}
+    .main{display:none;margin-top:-22px;padding:0 16px 42px}.auth{max-width:520px;margin:-22px auto 0;padding:0 16px 42px}.auth .card{text-align:center}.google{background:#fff;color:var(--ink);border:1px solid var(--line);width:100%;display:flex;justify-content:center;gap:10px;align-items:center}.google:before{content:'G';font-weight:900;color:#4285f4}.user-badge{float:right;background:#e8f1f0;color:var(--brand-dark);border-radius:99px;padding:6px 10px;font-size:.78rem}.main.authenticated{display:block}.auth.hidden{display:none}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px #123b4a12;padding:22px;margin-bottom:16px}.card h2{font-size:1.12rem;margin:0 0 5px}.hint{color:var(--muted);font-size:.9rem;margin:0 0 18px}.form-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:.84rem;font-weight:750}.field input,.field select{border:1px solid #cbdada;border-radius:10px;padding:12px;font:inherit;color:var(--ink);background:#fff}.field input:focus,.field select:focus{outline:3px solid #176b7030;border-color:var(--brand)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:10px;padding:11px 15px;font:inherit;font-weight:750;cursor:pointer}.primary{background:var(--brand);color:#fff}.secondary{background:#e8f1f0;color:var(--brand-dark)}.danger{background:#fff0f0;color:var(--danger)}button:hover{filter:brightness(.96)}.message{display:none;margin-top:14px;padding:11px 13px;border-radius:10px;font-size:.9rem}.message.ok{display:block;background:#eaf7f0;color:var(--ok)}.message.error{display:block;background:#fff0f0;color:var(--danger)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.stat{background:#f5f9f8;border-radius:12px;padding:13px}.stat strong{display:block;font-size:1.35rem;color:var(--brand-dark)}.stat span{font-size:.78rem;color:var(--muted)}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.toolbar input{max-width:250px;border:1px solid var(--line);border-radius:9px;padding:9px;font:inherit}.empty{padding:26px;text-align:center;color:var(--muted);background:#f7faf9;border-radius:12px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}td:last-child{text-align:right}.remove{padding:6px 9px;background:#fff0f0;color:var(--danger);font-size:.8rem}.foot{color:var(--muted);text-align:center;font-size:.8rem;margin-top:18px}
+    @media(max-width:620px){.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.toolbar{align-items:stretch;flex-direction:column}.toolbar input{max-width:none;width:100%}.card{padding:18px}.hero{padding-top:24px}}
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="hero-inner"><div class="eyebrow">Irmandade do Santíssimo Sacramento</div><h1>Informe quando você não pode servir</h1><p>Registre cada data de indisponibilidade. Essas informações serão usadas na montagem das escalas das três igrejas.</p></div></header>
+  <main class="main">
+    <section class="card">
+      <h2>Nova indisponibilidade</h2><p class="hint">Selecione seu nome e a data em que não poderá servir.</p>
+      <form id="unavailabilityForm">
+        <div class="form-grid"><div class="field"><label for="member">Nome da pessoa</label><input id="member" autocomplete="off" required><select id="memberAdmin" required hidden disabled><option value="">Selecione uma pessoa</option></select><datalist id="members"></datalist></div><div class="field"><label for="date">Data que não pode servir</label><input id="date" type="date" required></div></div>
+        <div class="actions"><button class="primary" type="submit">Adicionar data</button><button class="secondary" type="button" id="exportBtn">Exportar CSV</button></div>
+      </form><div id="message" class="message" role="status"></div>
+    </section>
+    <section class="card">
+      <div class="toolbar"><div><h2>Indisponibilidades registradas</h2><p class="hint" style="margin-bottom:0">Os registros ficam salvos neste aparelho.</p></div><input id="filter" type="search" placeholder="Filtrar por nome"></div>
+      <div class="stats"><div class="stat"><strong id="total">0</strong><span>registros</span></div><div class="stat"><strong id="people">0</strong><span>pessoas</span></div><div class="stat"><strong id="next">—</strong><span>próxima data</span></div></div>
+      <div id="records"></div>
+      <div class="actions"><button class="danger" type="button" id="clearBtn">Apagar todos os registros</button></div>
+    </section>
+    <p class="foot">Versão inicial • Próximo módulo: geração automática da escala por missa e igreja.</p>
+  </main>
+  <script>
+    const MEMBERS = [
+      "ADRIANA DOS SANTOS RIBEIRO","ADRIELLY NUNES DOS REIS","ALEXANDRE DE SOUZA OLIVEIRA","ALEXSANDER ARES DE LIMA CAMPOS","ALINE FERREIRA RANGON","ALINE SÁ SANTOS","ANA MARIA KAPICIUS","ANTONIO CARLOS M. JUNIOR","CLÁUDIO DIAS DA SILVA","CLIGIANNA COELHO GOMES ALVES","DANILA BARROS BANDEIRA RIBEIRO","DOUGLAS RAFAEL TEIXEIRA DA SILVA","EDUARDO DOS SANTOS RIBEIRO","ELISA APARECIDA MACHADO","FRANCISCA MOREIRA MUNGO","GENI DE BRITO MIRANDA","GERLANE ARAÚJO RIBEIRO","GILSON LUIZ ARAÚJO NASCIMENTO","GRASIELI DE LIMA MARFIL NAKAGAWA","JERONIMO FRANCISCO DE ALMEIDA","JOÃO CAETANO DOS SANTOS","KARLA DA SILVA GELATI","KEURE GOMES TEIXEIRA","KLEBER DOS REIS","LEA GARCIA","LILIAN KELLY RAMOS DA SILVA TEOTÔNIO","MARCIA MARIA PEREIRA COSTA","MARCILIA DE SOUZ GUIMARÃES","MARCIO MASSAYUQUE NAKAGAWA","MARIA CÍCERA V. RODRIGUES","MARIA DA SOLEDADE ALVES DE ANDRADE","MARIA NUBIA S OUQUETO","PALOMA APARECIDA VILARINS","PAULO GARCIA","REGIANE APARECIDA SOARES SANTOS","RODRIGO SALES LOPES BARBOSA","ROSIMEIRE VITAL DA SILVA","RUBENS ASSIS CARDOSO","RUDI VILA REAL","TEREZINHA FRANCISCO","VALQUIRIA CLAUDINO DA SILVA","VILMA P COSTA","VILSON MARTINS","WILLIANS JOSÉ DA SILVA","WILSON MIRANDA","CAMILA GRANDINI DA SILVA","ALINE O. PEREIRA SUSIGAN","ANDERSON SOARES V. GARCIA","CILENE SANTOS SILVA","MARIA DE FATIMA LOPES DE SOUZA","GABRIELA LEITE","GUSTAVO CAMAROTO","JULIO MALACIZE NETO","LAURELANE AP. DE BRITO","PALOMA ALMEIDA","PAULO HENRIQUE RANGON","RAPHAEL FERNANDES DE SOUZA","RENAN","VANESSA JAMARINO SOUZA","ERONILSON DOS SANTOS OLIVEIRA","CRISTIANA DA SILVA OLIVEIRA","RENAN LEITE PESSOA DE SOUZA","LUCIENE SAAD CARNAVALE"
+    ];
+    const KEY='irmandade_indisponibilidades_v1', $=id=>document.getElementById(id), get=()=>JSON.parse(localStorage.getItem(KEY)||'[]'), save=r=>localStorage.setItem(KEY,JSON.stringify(r));
+    const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const dateText=s=>new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeZone:'UTC'}).format(new Date(s+'T00:00:00Z'));
+    function message(text,error=false){$('message').textContent=text;$('message').className='message '+(error?'error':'ok');setTimeout(()=>$('message').className='message',3500)}
+    function render(){const all=get(), term=$('filter').value.trim().toLocaleLowerCase('pt-BR'), rows=all.filter(x=>x.member.toLocaleLowerCase('pt-BR').includes(term)).sort((a,b)=>a.date.localeCompare(b.date));$('total').textContent=all.length;$('people').textContent=new Set(all.map(x=>x.member)).size;const future=all.map(x=>x.date).filter(x=>x>=new Date().toISOString().slice(0,10)).sort()[0];$('next').textContent=future?dateText(future):'—';if(!rows.length){$('records').innerHTML='<div class="empty">Nenhuma indisponibilidade registrada.</div>';return} $('records').innerHTML='<div class="table-wrap"><table><thead><tr><th>Pessoa</th><th>Data</th><th></th></tr></thead><tbody>'+rows.map(x=>`<tr><td>${esc(x.member)}</td><td>${dateText(x.date)}</td><td><button class="remove" data-id="${esc(x.id)}">Remover</button></td></tr>`).join('')+'</tbody></table></div>';document.querySelectorAll('.remove').forEach(b=>b.onclick=()=>{save(get().filter(x=>x.id!==b.dataset.id));render();message('Registro removido.')})}
+    MEMBERS.forEach(name=>{const o=document.createElement('option');o.value=name;$('members').appendChild(o)});
+  </script>
+</body>
+<script src="supabase-config.js"></script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const config = window.SUPABASE_CONFIG || {};
+  const auth = document.createElement('section');
+  auth.className = 'auth';
+  auth.innerHTML = `<div class="card"><div class="eyebrow">Acesso seguro</div><h2>Entrar na Irmandade</h2><p class="hint">Use sua conta Google autorizada para registrar indisponibilidades.</p><button class="google" id="googleLogin">Continuar com Google</button><div id="authMessage" class="message"></div></div>`;
+  document.querySelector('.hero').after(auth);
+  const app = document.querySelector('.main');
+  const memberInput = document.getElementById('member');
+  const memberAdmin = document.getElementById('memberAdmin');
+  const membersList = document.getElementById('members');
+  const listCard = document.getElementById('records').closest('.card');
+  const authMessage = document.getElementById('authMessage');
+  MEMBERS.forEach(name=>{
+    const option=document.createElement('option');
+    option.value=name;
+    option.textContent=name;
+    memberAdmin.appendChild(option);
+  });
+  function authError(text){authMessage.textContent=text;authMessage.className='message error'}
+  function oauthCallbackError(){
+    const query=new URLSearchParams(location.search);
+    const hash=new URLSearchParams(location.hash.replace(/^#/, ''));
+    const error=query.get('error') || hash.get('error');
+    const description=query.get('error_description') || hash.get('error_description');
+    if(!error) return;
+    authError(description ? decodeURIComponent(description.replace(/\+/g,' ')) : 'O login Google não foi concluído.');
+    const cleanUrl=new URL(location.href);
+    cleanUrl.search='';
+    cleanUrl.hash='';
+    history.replaceState({},document.title,cleanUrl.href);
+  }
+
+  let supabase;
+  let session;
+  let profile;
+  let records = [];
+  let profileLoading = false;
+
+  function displayDate(value){
+    return new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'));
+  }
+  function escapeHtml(value){
+    return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  async function loadRecords(){
+    let query=supabase.from('unavailabilities').select('id,user_id,member_name,unavailable_date,created_at').order('unavailable_date');
+    if(profile.role==='user') query=query.eq('user_id',session.user.id);
+    const {data,error}=await query;
+    if(error) throw error;
+    records=(data||[]).map(row=>({id:row.id,userId:row.user_id,member:row.member_name,date:row.unavailable_date,createdAt:row.created_at}));
+  }
+  function renderShared(){
+    const term=document.getElementById('filter').value.trim().toLocaleLowerCase('pt-BR');
+    const rows=records.filter(row=>row.member.toLocaleLowerCase('pt-BR').includes(term)).sort((a,b)=>a.date.localeCompare(b.date));
+    document.getElementById('total').textContent=rows.length;
+    document.getElementById('people').textContent=new Set(rows.map(row=>row.member)).size;
+    const today=new Date().toISOString().slice(0,10);
+    const future=rows.map(row=>row.date).filter(date=>date>=today).sort()[0];
+    document.getElementById('next').textContent=future?displayDate(future):'—';
+    if(!rows.length){document.getElementById('records').innerHTML='<div class="empty">Nenhuma indisponibilidade registrada.</div>';return}
+    document.getElementById('records').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Pessoa</th><th>Data</th><th></th></tr></thead><tbody>${rows.map(row=>`<tr><td>${escapeHtml(row.member)}</td><td>${displayDate(row.date)}</td><td><button class="remove" data-id="${escapeHtml(row.id)}">Remover</button></td></tr>`).join('')}</tbody></table></div>`;
+    document.querySelectorAll('.remove').forEach(button=>button.onclick=()=>removeRecord(button.dataset.id));
+  }
+  async function removeRecord(id){
+    const {error}=await supabase.from('unavailabilities').delete().eq('id',id);
+    if(error){message(error.message,true);return}
+    await refreshRecords();
+    message('Registro removido.');
+  }
+  async function refreshRecords(){
+    try{await loadRecords();renderShared()}catch(error){message(error.message,true)}
+  }
+  async function setupProfile(){
+    if(profileLoading) return true;
+    profileLoading=true;
+    const {data,error}=await supabase.from('profiles').select('full_name,role').eq('id',session.user.id).single();
+    profileLoading=false;
+    if(error || !data){authError('Seu perfil ainda não foi configurado no sistema. Configure a tabela profiles no Supabase e faça login novamente.');return false}
+    profile=data;
+    if(app.classList.contains('authenticated')) return true;
+    memberInput.value=profile.full_name;
+    memberInput.dataset.role=profile.role;
+    if(profile.role==='user'){
+      memberInput.hidden=false;
+      memberAdmin.hidden=true;
+      memberInput.disabled=false;
+      memberAdmin.disabled=true;
+      memberInput.readOnly=true;
+      memberInput.removeAttribute('list');
+      membersList.innerHTML='';
+      listCard.style.display='none';
+    } else {
+      memberInput.hidden=true;
+      memberAdmin.hidden=false;
+      memberInput.disabled=true;
+      memberAdmin.disabled=false;
+      listCard.style.display='block';
+    }
+    app.classList.add('authenticated');auth.classList.add('hidden');
+    const title=document.querySelector('.hero-inner');
+    title.insertAdjacentHTML('beforeend',`<span class="user-badge">${profile.role==='admin'?'Administrador':'Membro'} • ${profile.full_name}</span>`);
+    await refreshRecords();
+    return true;
+  }
+  async function startAuth(){
+    if(!config.url || !config.anonKey){authError('Configure a chave pública do Supabase em supabase-config.js para ativar o login Google.');return}
+    supabase=createClient(config.url,config.anonKey);
+    const redirectTo=new URL('index.html',location.href).href;
+    oauthCallbackError();
+    document.getElementById('googleLogin').onclick=async()=>{
+      document.getElementById('googleLogin').disabled=true;
+      const {error}=await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
+      if(error){document.getElementById('googleLogin').disabled=false;authError(error.message)}
+    };
+    const {data}=await supabase.auth.getSession();
+    if(data.session){session=data.session;await setupProfile()}
+    supabase.auth.onAuthStateChange(async(event,currentSession)=>{
+      if(!currentSession || !['SIGNED_IN','TOKEN_REFRESHED'].includes(event)) return;
+      session=currentSession;
+      await setupProfile();
+    });
+  }
+
+  document.getElementById('unavailabilityForm').onsubmit=async event=>{
+    event.preventDefault();
+    const member=profile.role==='admin' ? memberAdmin.value.trim() : memberInput.value.trim();
+    const date=document.getElementById('date').value;
+    if(!session || !profile) return;
+    if(profile.role==='user' && member!==profile.full_name){message('Você só pode registrar datas para o seu próprio nome.',true);return}
+    if(!MEMBERS.includes(member)){message('Selecione um nome da lista de membros.',true);return}
+    if(records.some(row=>row.member===member && row.date===date)){message('Essa pessoa já possui essa data registrada.',true);return}
+    const {error}=await supabase.from('unavailabilities').insert({user_id:session.user.id,member_name:member,unavailable_date:date});
+    if(error){message(error.message,true);return}
+    event.target.reset();
+    if(profile.role==='user') memberInput.value=profile.full_name;
+    await refreshRecords();
+    message('Indisponibilidade adicionada com sucesso.');
+  };
+  document.getElementById('filter').oninput=renderShared;
+  document.getElementById('clearBtn').onclick=async()=>{
+    if(profile?.role!=='admin') return;
+    if(!records.length || !confirm('Apagar todas as indisponibilidades compartilhadas?')) return;
+    const {error}=await supabase.from('unavailabilities').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    if(error){message(error.message,true);return}
+    await refreshRecords();
+    message('Todos os registros foram apagados.');
+  };
+  document.getElementById('exportBtn').onclick=()=>{
+    if(!records.length){message('Não há registros para exportar.',true);return}
+    const csv='NOME,DATA\n'+records.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(row=>`"${row.member.replaceAll('"','""')}",${displayDate(row.date)}`).join('\n');
+    const link=document.createElement('a');
+    link.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+    link.download='indisponibilidades_irmandade.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+  startAuth();
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  }
+</script>
+</html>
