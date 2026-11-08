@@ -65,12 +65,17 @@ $$;
 revoke all on function public.is_admin() from public;
 grant execute on function public.is_admin() to authenticated;
 
+drop policy if exists "authenticated read edit lock" on public.app_settings;
 create policy "authenticated read edit lock" on public.app_settings
   for select to authenticated using (true);
 
+drop policy if exists "admins update edit lock" on public.app_settings;
 create policy "admins update edit lock" on public.app_settings
   for update to authenticated using (public.is_admin())
   with check (public.is_admin());
+
+grant select, update on public.app_settings to authenticated;
+notify pgrst, 'reload schema';
 
 create policy "admins read all unavailability" on public.unavailabilities
   for select using (public.is_admin());
