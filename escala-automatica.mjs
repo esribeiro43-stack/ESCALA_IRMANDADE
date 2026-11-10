@@ -148,8 +148,7 @@ export function generateMonthlySchedule({ year, month, roster, unavailabilities 
       event.note = `Faltam ${missing} posto${missing === 1 ? '' : 's'} para completar os cinco.`;
     }
     if (assigned.length) {
-      const lastAssigned = candidates.findIndex(member => member.key === assigned.at(-1).key);
-      tieOrder.set(event.communityKey, (lastAssigned + 1) % candidates.length);
+      tieOrder.set(event.communityKey, (rotationStart + 1) % candidates.length);
     }
     servingOnDate.set(event.date, alreadyServing);
   }
