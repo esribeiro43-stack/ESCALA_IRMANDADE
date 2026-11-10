@@ -1,4 +1,4 @@
-const CACHE_NAME = 'irmandade-v7';
+const CACHE_NAME = 'irmandade-v8';
 const APP_FILES = [
   './',
   './index.html',
