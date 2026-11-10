@@ -22,6 +22,13 @@ create table if not exists public.app_settings (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.schedule_publications (
+  schedule_month date primary key check (extract(day from schedule_month) = 1),
+  schedule jsonb not null check (jsonb_typeof(schedule) = 'array'),
+  published_by uuid not null references auth.users(id),
+  published_at timestamptz not null default now()
+);
+
 insert into public.app_settings (key, edits_locked)
 values ('unavailabilities', false)
 on conflict (key) do nothing;
@@ -29,13 +36,20 @@ on conflict (key) do nothing;
 alter table public.profiles enable row level security;
 alter table public.unavailabilities enable row level security;
 alter table public.app_settings enable row level security;
+alter table public.schedule_publications enable row level security;
 
+drop policy if exists "users can read own profile" on public.profiles;
 create policy "users can read own profile" on public.profiles
   for select using (auth.uid() = id);
 
 drop policy if exists "users manage own unavailability" on public.unavailabilities;
 drop policy if exists "users_can_insert_own_unavailability" on public.unavailabilities;
 drop policy if exists "users_can_select_own_unavailability" on public.unavailabilities;
+
+drop policy if exists "users insert own unavailability" on public.unavailabilities;
+drop policy if exists "users read own unavailability" on public.unavailabilities;
+drop policy if exists "users update own unavailability" on public.unavailabilities;
+drop policy if exists "users delete own unavailability" on public.unavailabilities;
 
 create policy "users insert own unavailability" on public.unavailabilities
   for insert to authenticated with check (auth.uid() = user_id);
@@ -65,6 +79,25 @@ $$;
 revoke all on function public.is_admin() from public;
 grant execute on function public.is_admin() to authenticated;
 
+drop policy if exists "authenticated read published schedules" on public.schedule_publications;
+create policy "authenticated read published schedules" on public.schedule_publications
+  for select to authenticated using (true);
+
+drop policy if exists "admins publish schedules" on public.schedule_publications;
+create policy "admins publish schedules" on public.schedule_publications
+  for insert to authenticated with check (public.is_admin());
+
+drop policy if exists "admins update published schedules" on public.schedule_publications;
+create policy "admins update published schedules" on public.schedule_publications
+  for update to authenticated using (public.is_admin())
+  with check (public.is_admin());
+
+drop policy if exists "admins delete published schedules" on public.schedule_publications;
+create policy "admins delete published schedules" on public.schedule_publications
+  for delete to authenticated using (public.is_admin());
+
+grant select, insert, update, delete on public.schedule_publications to authenticated;
+
 drop policy if exists "authenticated read edit lock" on public.app_settings;
 create policy "authenticated read edit lock" on public.app_settings
   for select to authenticated using (true);
@@ -77,9 +110,11 @@ create policy "admins update edit lock" on public.app_settings
 grant select, update on public.app_settings to authenticated;
 notify pgrst, 'reload schema';
 
+drop policy if exists "admins read all unavailability" on public.unavailabilities;
 create policy "admins read all unavailability" on public.unavailabilities
   for select using (public.is_admin());
 
+drop policy if exists "admins manage all unavailability" on public.unavailabilities;
 create policy "admins manage all unavailability" on public.unavailabilities
   for all using (public.is_admin())
   with check (public.is_admin());

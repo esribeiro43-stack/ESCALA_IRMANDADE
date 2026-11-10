@@ -23,6 +23,10 @@ O acesso de administrador inclui a geração de escala mensal, com os resultados
 
 O arquivo `membros-comunidades.json` é a cópia de dados usada pelo app, extraída da planilha de presença. Ao atualizar a planilha, atualize também esse arquivo. Nomes que estejam na lista do app mas não tenham comunidade na planilha não são escalados; o administrador recebe um aviso para confirmar o cadastro antes de incluí-los.
 
+### Publicar e consultar
+
+Administradores podem gerar a escala como prévia e publicá-la para consulta dos membros autenticados. A escala publicada fica compartilhada no Supabase, separada por mês e comunidade. Os membros abrem **Visualizar escala** no perfil, pesquisam pelo próprio nome e expandem a comunidade para ver as missas em que servirão. Para habilitar esse recurso em um projeto Supabase já existente, execute novamente o `supabase-schema.sql` atualizado no SQL Editor; ele cria a tabela de publicações e as políticas RLS para permitir leitura autenticada e publicação somente por administradores.
+
 ## Autenticação Google
 
 Foi preparada a estrutura para Supabase em `supabase-config.js` e `supabase-schema.sql`. Preencha a URL e a chave pública (anon/publishable key), execute o schema, habilite Google em Authentication > Providers e cadastre os perfis pelo script de convites. O mapeamento inicial é:
