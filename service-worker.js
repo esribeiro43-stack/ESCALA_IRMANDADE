@@ -1,10 +1,10 @@
-const CACHE_NAME = 'irmandade-v6';
+const CACHE_NAME = 'irmandade-v7';
 const APP_FILES = [
   './',
   './index.html',
   './manifest.webmanifest',
   './supabase-config.js',
-  './escala-automatica.mjs',
+  './escala-automatica.mjs?v=5-postos',
   './membros-comunidades.json',
   './logo-irmandade.png',
   './icons/icon-192.png',
