@@ -15,11 +15,11 @@ Abra [`index.html`](./index.html) diretamente no navegador. A tela funciona em c
 
 ## Módulo de escala
 
-A geração automatizada mensal está disponível para administradores, conforme as missas e as regras de datas especiais descritas em `REGRA_DE_NEGOCIO.txt`.
+A geração automatizada mensal está disponível para administradores, conforme as missas e as regras de datas especiais descritas em `REGRA_DE_NEGOCIO.txt`. Cada missa tem cinco posições: Frente, Frente, Lateral, Lateral e Fundo.
 
 ## Escala automatizada
 
-O acesso de administrador inclui a geração de escala mensal. O gerador usa dois membros por missa, considera as indisponibilidades cadastradas, distribui os serviços de forma equilibrada e mantém cada membro na comunidade indicada na coluna C de `CONTROLE DE PRESENÇA.xlsx`. As missas regulares, o primeiro sábado do mês na Matriz e a novena do dia 10 em Santa Filomena seguem `REGRA_DE_NEGOCIO.txt`; o resultado pode ser conferido no app e baixado em CSV.
+O acesso de administrador inclui a geração de escala mensal. O gerador preenche cinco posições por missa — Frente, Frente, Lateral, Lateral e Fundo —, considera as indisponibilidades cadastradas, distribui os serviços de forma equilibrada e mantém cada membro na comunidade indicada na coluna C de `CONTROLE DE PRESENÇA.xlsx`. As missas regulares, o primeiro sábado do mês na Matriz e a novena do dia 10 em Santa Filomena seguem `REGRA_DE_NEGOCIO.txt`; o resultado pode ser conferido no app e baixado em CSV.
 
 O arquivo `membros-comunidades.json` é a cópia de dados usada pelo app, extraída da planilha de presença. Ao atualizar a planilha, atualize também esse arquivo. Nomes que estejam na lista do app mas não tenham comunidade na planilha não são escalados; o administrador recebe um aviso para confirmar o cadastro antes de incluí-los.
 

@@ -48,7 +48,7 @@
     </div>
     <section class="card" id="scheduleCard" hidden>
       <h2>Escala automatizada</h2>
-      <p class="hint">Gere a escala mensal considerando a comunidade da planilha, as indisponibilidades registradas e dois membros por missa.</p>
+      <p class="hint">Gere a escala mensal por comunidade e indisponibilidade, preenchendo Frente, Frente, Lateral, Lateral e Fundo.</p>
       <div class="actions"><button class="secondary" type="button" id="backHomeBtn">Voltar ao início</button></div>
       <div class="form-grid">
         <div class="field"><label for="scheduleMonth">Mês da escala</label><input id="scheduleMonth" type="month" required></div>
@@ -250,7 +250,7 @@
   function renderSchedule(){
     const results=document.getElementById('scheduleResults');
     if(!generatedSchedule.length){results.innerHTML='<div class="empty">Nenhuma missa encontrada para o mês selecionado.</div>';return}
-    results.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Data</th><th>Dia</th><th>Horário</th><th>Comunidade</th><th>Membro 1</th><th>Membro 2</th><th>Observação</th></tr></thead><tbody>${generatedSchedule.map(event=>`<tr><td>${formatScheduleDate(event.date)}</td><td>${escapeHtml(event.weekday)}</td><td>${event.time}</td><td>${escapeHtml(event.community)}</td><td>${escapeHtml(event.members[0]||'—')}</td><td>${escapeHtml(event.members[1]||'—')}</td><td>${escapeHtml([event.occasion,event.note].filter(Boolean).join(' • ')||'—')}</td></tr>`).join('')}</tbody></table></div>`;
+    results.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Data</th><th>Dia</th><th>Horário</th><th>Comunidade</th>${['FRENTE','FRENTE','LATERAL','LATERAL','FUNDO'].map(label=>`<th>${label}</th>`).join('')}<th>Observação</th></tr></thead><tbody>${generatedSchedule.map(event=>`<tr><td>${formatScheduleDate(event.date)}</td><td>${escapeHtml(event.weekday)}</td><td>${event.time}</td><td>${escapeHtml(event.community)}</td>${event.positions.map(position=>`<td>${escapeHtml(position.member||'—')}</td>`).join('')}<td>${escapeHtml([event.occasion,event.note].filter(Boolean).join(' • ')||'—')}</td></tr>`).join('')}</tbody></table></div>`;
   }
   async function generateSchedule(){
     if(profile?.role!=='admin') return;
@@ -267,17 +267,16 @@
         year:Number(match[1]),
         month:Number(match[2]),
         roster,
-        unavailabilities:records,
-        membersPerMass:2
+        unavailabilities:records
       });
       renderSchedule();
       document.getElementById('downloadScheduleBtn').hidden=false;
       const rosterNames=new Set(roster.map(member=>member.name));
       const withoutCommunity=MEMBERS.filter(name=>!rosterNames.has(name));
-      const incomplete=generatedSchedule.filter(event=>event.members.length<2).length;
-      let summary=`${generatedSchedule.length} missas geradas para ${roster.length} membros da planilha; dois membros por missa, respeitando a comunidade e as indisponibilidades.`;
+      const incomplete=generatedSchedule.filter(event=>event.positions.some(position=>!position.member)).length;
+      let summary=`${generatedSchedule.length} missas geradas para ${roster.length} membros da planilha; cinco posições por missa (Frente, Frente, Lateral, Lateral e Fundo), respeitando a comunidade e as indisponibilidades.`;
       if(withoutCommunity.length) summary+=` ${withoutCommunity.length} nomes da lista do app não constam na planilha e ficaram fora da escala: ${withoutCommunity.join(', ')}.`;
-      if(incomplete) summary+=` ${incomplete} missa(s) ficou(ficaram) com escala incompleta por falta de membros disponíveis.`;
+      if(incomplete) summary+=` Atenção: ${incomplete} missas ficaram com posições sem preencher.`;
       showScheduleMessage(summary,incomplete>0||withoutCommunity.length>0);
     }catch(error){
       generatedSchedule=[];
@@ -292,10 +291,10 @@
     if(!generatedSchedule.length) return;
     const quote=value=>`"${String(value??'').replace(/"/g,'""')}"`;
     const rows=[
-      ['DATA','DIA','HORARIO','COMUNIDADE','MEMBRO 1','MEMBRO 2','OBSERVACAO'],
+      ['DATA','DIA','HORARIO','COMUNIDADE',...generatedSchedule[0].positions.map(position=>position.csvLabel),'OBSERVACAO'],
       ...generatedSchedule.map(event=>[
         event.date,event.weekday,event.time,event.community,
-        event.members[0]||'',event.members[1]||'',[event.occasion,event.note].filter(Boolean).join(' - ')
+        ...event.positions.map(position=>position.member),[event.occasion,event.note].filter(Boolean).join(' - ')
       ])
     ];
     const csv='\uFEFF'+rows.map(row=>row.map(quote).join(',')).join('\r\n');

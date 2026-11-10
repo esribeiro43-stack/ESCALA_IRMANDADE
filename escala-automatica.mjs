@@ -4,6 +4,13 @@ const COMMUNITY_LABELS = {
   fatima: 'Nossa Senhora de Fátima',
   filomena: 'Santa Filomena'
 };
+const POSITIONS = [
+  { label: 'FRENTE', csvLabel: 'FRENTE 1' },
+  { label: 'FRENTE', csvLabel: 'FRENTE 2' },
+  { label: 'LATERAL', csvLabel: 'LATERAL 1' },
+  { label: 'LATERAL', csvLabel: 'LATERAL 2' },
+  { label: 'FUNDO', csvLabel: 'FUNDO' }
+];
 const WEEKLY_MASSES = [
   { community: 'matriz', weekday: 0, time: '08:00' },
   { community: 'matriz', weekday: 0, time: '10:00' },
@@ -38,15 +45,12 @@ function dateKey(year, month, day) {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
-export function generateMonthlySchedule({ year, month, roster, unavailabilities = [], membersPerMass = 2 }) {
+export function generateMonthlySchedule({ year, month, roster, unavailabilities = [] }) {
   if (!Number.isInteger(year) || year < 1900 || year > 9999) {
     throw new RangeError('Informe um ano válido.');
   }
   if (!Number.isInteger(month) || month < 1 || month > 12) {
     throw new RangeError('Informe um mês válido entre 1 e 12.');
-  }
-  if (!Number.isInteger(membersPerMass) || membersPerMass < 1) {
-    throw new RangeError('A quantidade de membros por missa precisa ser positiva.');
   }
   if (!Array.isArray(roster) || roster.length === 0) {
     throw new TypeError('A lista de membros e comunidades está vazia ou inválida.');
@@ -84,7 +88,7 @@ export function generateMonthlySchedule({ year, month, roster, unavailabilities 
       communityKey: rule.community,
       community: COMMUNITY_LABELS[rule.community],
       occasion,
-      members: [],
+      positions: POSITIONS.map(position => ({ ...position, member: '' })),
       note: ''
     });
   };
@@ -131,17 +135,20 @@ export function generateMonthlySchedule({ year, month, roster, unavailabilities 
           - (bPosition - rotationStart + candidates.length) % candidates.length;
       });
 
-    event.members = eligible.slice(0, membersPerMass).map(member => member.name);
-    for (const member of eligible.slice(0, membersPerMass)) {
+    const assigned = eligible.slice(0, POSITIONS.length);
+    event.positions.forEach((position, index) => {
+      position.member = assigned[index]?.name || '';
+    });
+    for (const member of assigned) {
       serviceCounts.set(member.key, serviceCounts.get(member.key) + 1);
       alreadyServing.add(member.key);
     }
-    if (event.members.length < membersPerMass) {
-      const missing = membersPerMass - event.members.length;
-      event.note = `Faltam ${missing} membro${missing === 1 ? '' : 's'} ${missing === 1 ? 'disponível' : 'disponíveis'}.`;
+    if (assigned.length < POSITIONS.length) {
+      const missing = POSITIONS.length - assigned.length;
+      event.note = `Faltam ${missing} posto${missing === 1 ? '' : 's'} para completar os cinco.`;
     }
-    if (event.members.length) {
-      const lastAssigned = candidates.findIndex(member => member.key === normalizedText(event.members.at(-1)));
+    if (assigned.length) {
+      const lastAssigned = candidates.findIndex(member => member.key === assigned.at(-1).key);
       tieOrder.set(event.communityKey, (lastAssigned + 1) % candidates.length);
     }
     servingOnDate.set(event.date, alreadyServing);
